@@ -1,13 +1,14 @@
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import os
+from io import BytesIO
 import pandas
 
 # if not os.path.exists("images"):
 #     os.mkdir("images")
 
 
-def draw_and_save(pair: str, timeframe: str , anomaly_time, data: pandas.DataFrame) -> str:
+def draw_and_save(pair: str, timeframe: str , anomaly_time, data: pandas.DataFrame) -> BytesIO:
     data['color'] =  'green'
     data.loc[data['open'] > data['close'],'color'] = 'red'
     candle_chart = go.Candlestick(x=data['close_time'],
@@ -21,8 +22,8 @@ def draw_and_save(pair: str, timeframe: str , anomaly_time, data: pandas.DataFra
     fig.add_trace(bar_chart, row=1, col=1, secondary_y=True)
     
     fig.update_layout(
-        width=800,
-        height=800,
+        width=1000,
+        height=1000,
         title=f"{pair} {timeframe}<br><sup>{anomaly_time[:-4]} UTC</sup>",
         plot_bgcolor='white',
         font_family="Courier New",
@@ -44,13 +45,15 @@ def draw_and_save(pair: str, timeframe: str , anomaly_time, data: pandas.DataFra
     ]
     )
     fig.update(layout_xaxis_rangeslider_visible=False)
+    candle_range = [data['low'].min() * 0.95, data['high'].max() * 1.05]
     fig.update_xaxes(
         mirror=True,
         #ticks='outside',
         showline=True,
         linecolor='white',
         gridcolor='lightgrey',
-        tickangle=90
+        tickangle=90,
+        range=candle_range
     )
     fig.update_yaxes(
         mirror=True,
@@ -72,5 +75,6 @@ def draw_and_save(pair: str, timeframe: str , anomaly_time, data: pandas.DataFra
     #fig.add_vline(x=datetime(1970, 1, 1), line_width=1, line_dash="dash", line_color="red", annotation_text='yay')
     # fig.show()
     path = f"images/{anomaly_time}_{pair}_{timeframe}.png"
-    fig.write_image(path)
-    return path
+    image = BytesIO()
+    fig.write_image(image)
+    return image
