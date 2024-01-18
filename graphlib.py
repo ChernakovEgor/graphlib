@@ -29,8 +29,8 @@ class Candlestick:
             marker={"color": self.__data["color"]},
         )
         fig = make_subplots(specs=[[{"secondary_y": True}]])
-        fig.add_trace(candle_chart, row=1, col=1)
-        fig.add_trace(bar_chart, row=1, col=1, secondary_y=True)
+        fig.add_trace(candle_chart)
+        fig.add_trace(bar_chart, secondary_y=True)
 
         fig.update_layout(
             # autosize=False,
