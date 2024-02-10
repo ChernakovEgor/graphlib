@@ -36,7 +36,7 @@ class Candlestick:
             # autosize=False,
             width=1000,
             height=1000,
-            title=f"{self.__pair} {self.__timeframe}<br><sup>{self.__anomaly_time[:-4]} UTC</sup>",
+            title=f"{self.__pair} {self.__timeframe}<br>{self.__anomaly_time[:-4]} UTC",
             plot_bgcolor="white",
             font_family="Courier New",
             font_size=20,
@@ -88,6 +88,11 @@ class Candlestick:
             secondary_y=True,
         )
         # fig.add_vline(x=datetime(1970, 1, 1), line_width=1, line_dash="dash", line_color="red", annotation_text='yay')
+        # cs = fig.data[2]
+        fig.data[0].increasing.fillcolor = "#3D9970"
+        fig.data[0].increasing.line.color = "#3D9970"
+        fig.data[0].decreasing.fillcolor = "#FF4136"
+        fig.data[0].decreasing.line.color = "#FF4136"
         self.fig = fig
 
     def as_image(self):
